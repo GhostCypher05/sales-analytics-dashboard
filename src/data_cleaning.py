@@ -1,8 +1,8 @@
-from data_loader import load_data
 import pandas as pd
 
+RAW_DATA_PATH = "data/raw/Sample - Superstore.csv"
 # Load the raw dataset
-df = load_data()
+df = pd.read_csv(RAW_DATA_PATH, encoding="cp1252", parse_dates=["Order Date", "Ship Date"])
 
 print("=" * 50)
 print("DATA CLEANING")
