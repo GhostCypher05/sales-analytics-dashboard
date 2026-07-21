@@ -86,6 +86,12 @@ profit_by_sub_category = (
     .reset_index()
 
 )
+discount_to_profit = (
+    df.groupby('Discount')['Profit']
+    .sum()
+    .sort_values()
+    .reset_index()
+)
 
 def create_plotly_bar_chart(data, title, x, y , color = None, x_label=None, y_label=None, metric_name=None):
     fig = px.bar(
@@ -109,7 +115,7 @@ def create_plotly_bar_chart(data, title, x, y , color = None, x_label=None, y_la
         hovertemplate=f"<b>%{{x}}</b><br>{metric_name}: %{{y:$,.2f}}<extra></extra>",
     )
 
-    fig.show()
+    return fig
 
 def create_plotly_line_chart(data, title, x, y, x_label=None, y_label=None, metric_name=None):
     fig = px.line(
@@ -131,13 +137,33 @@ def create_plotly_line_chart(data, title, x, y, x_label=None, y_label=None, metr
         hovertemplate=f"<b>%{{x}}</b><br>{metric_name}: %{{y:$,.2f}}<extra></extra>",
     )
 
-    fig.show()
+    return fig
+
+def create_plotly_scatter_chart(data, title, x, y, x_label = None, y_label = None, metric_name=None):
+    fig = px.scatter(
+        data,
+        x=x,
+        y=y,
+        title=title,
+    )
+    fig.update_layout(
+        xaxis_title=x_label or x,
+        yaxis_title=y_label or y,
+        title_x=0.5,
+        template="plotly_white",
+        hovermode="closest",
+    )
+    fig.update_traces(
+        hovertemplate=f"<b>%{{x}}</b><br>{metric_name}: %{{y:$,.2f}}<extra></extra>",
+    )
+    return fig
 
 
 ####### Creating the visualizations using the functions defined above
 
 charts = [
     {
+        "chart_id": "sales_by_region",
         "data": sales_by_region,
         "title": "Total Sales by Region",
         "x": "Region",
@@ -147,6 +173,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "profit_by_region",
         "data": profit_by_region,
         "title": "Total Profit by Region",
         "x": "Region",
@@ -156,6 +183,7 @@ charts = [
         "chart_type":"bar"   
     },
     {
+        "chart_id": "monthly_sales",
         "data":monthly_sales,
         "title": "monthly sales trend",
         "x": "Order Date",
@@ -165,6 +193,7 @@ charts = [
 
     },
     {
+        "chart_id": "sales_by_category",
         "data": sales_by_category,
         "title": "Total Sales by Category",
         "x": "Category",
@@ -174,6 +203,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "profit_by_category",
         "data": profit_by_category,
         "title": "Total Profit by Category",
         "x": "Category",
@@ -183,6 +213,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "top_10_products_by_sales",
         "data": top_10_products_by_sales,
         "title": "Top 10 Products by Sales",
         "x": "Product Name",
@@ -192,6 +223,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "top_10_products_by_profit",
         "data": top_10_products_by_profit,
         "title": "Top 10 Products by Profit",
         "x": "Product Name",
@@ -201,6 +233,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "sales_by_segment",
         "data": sales_by_segment,
         "title": "Total Sales by Segment",
         "x": "Segment",
@@ -210,6 +243,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "profit_by_segment",
         "data": profit_by_segment,
         "title": "Profits from each segment",
         "x": "Segment",
@@ -219,6 +253,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "sales_by_sub_category",
         "data": sales_by_sub_category,
         "title": "Sales by different Sub Categories",
         "x": "Sub-Category",
@@ -228,6 +263,7 @@ charts = [
         "chart_type":"bar"
     },
     {
+        "chart_id": "profit_by_sub_category",
         "data": profit_by_sub_category,
         "title": "Profit by different Sub Categories",
         "x": "Sub-Category",
@@ -235,24 +271,52 @@ charts = [
         "color": "Profit",
         "metric_name": "Profit",
         "chart_type":"bar" 
+    },
+    {
+        "chart_id": "discount_to_profit",
+        "data": discount_to_profit,
+        "title": "Discount to profit relationship",
+        "x":"Discount",
+        "y":"Profit",
+        "color":"none",
+        "metric_name":"Profit",
+        "chart_type":"scatter"
+
     }
 ]
 
-for chart in charts:
-    if chart["chart_type"]=="bar":
-        create_plotly_bar_chart(
-            data=chart["data"],
-            title=chart["title"],
-            x=chart["x"],
-            y=chart["y"],
-            color=chart.get("color"),
-            metric_name=chart["metric_name"]
-        ) 
-    elif chart["chart_type"]== "line":
-        create_plotly_line_chart(
-            data=chart["data"],
-            title=chart["title"],
-            x=chart["x"],
-            y=chart["y"],
-            metric_name=chart["metric_name"]  
-        )
+def generate_all_figures():
+    figures = {}
+    
+    for chart in charts:
+            if  chart["chart_type"]=="bar":
+                fig = create_plotly_bar_chart(
+                    data=chart["data"],
+                    title=chart["title"],
+                    x=chart["x"],
+                    y=chart["y"],
+                    color=chart.get("color"),
+                    metric_name=chart["metric_name"],
+                )
+                figures[chart["chart_id"]] = fig
+                
+            elif chart["chart_type"]== "line":
+                fig = create_plotly_line_chart(
+                    data=chart["data"],
+                    title=chart["title"],
+                    x=chart["x"],
+                    y=chart["y"],
+                    metric_name=chart["metric_name"]  
+                )
+                figures[chart["chart_id"]] = fig
+            
+            elif chart["chart_type"] == "scatter":
+                fig = create_plotly_scatter_chart(
+                    data=chart["data"],
+                    title=chart["title"],
+                    x=chart["x"],
+                    y=chart["y"],
+                    metric_name=chart["metric_name"]
+                )
+                figures[chart["chart_id"]] = fig
+    return figures      
