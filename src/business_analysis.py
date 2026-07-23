@@ -3,34 +3,45 @@ from data_loader import load_data
 # Load cleaned dataset
 df = load_data()
 
-total_sales = (
+def calculate_kpis(df):
+
+    total_sales = (
     df['Sales'].sum()
-)
+    )
 
-total_profit = (
+    total_profit = (
     df['Profit'].sum()
-)
+    )
 
-total_orders = (
+    total_orders = (
     df["Order ID"].count()
-)
+    )
 
-total_customers = (
+    total_customers = (
     df["Customer ID"].nunique()
-)
+    )
 
 
-total_sales_by_region = (
+    total_sales_by_region = (
     df.groupby("Region")["Sales"]
       .sum()
       .sort_values(ascending=False)
-)
+    )
 
-sales_by_category = (
+    sales_by_category = (
     df.groupby("Category")["Sales"]
       .sum()
       .sort_values(ascending=False)
-)
+    )
+
+    return {
+        "total_sales":total_sales,
+        "total_profit":total_profit,
+        "total_orders":total_orders,
+        "total_customers":total_customers,
+        "total_sales_by_region":total_sales_by_region,
+        "sales_by_category":sales_by_category
+    }
 
 if __name__ == "__main__":
     print("*" * 50)

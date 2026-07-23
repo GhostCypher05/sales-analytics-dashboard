@@ -93,12 +93,11 @@ discount_to_profit = (
     .reset_index()
 )
 
-def create_plotly_bar_chart(data, title, x, y , color = None, x_label=None, y_label=None, metric_name=None):
+def create_plotly_bar_chart(data, x, y , color = None, x_label=None, y_label=None, metric_name=None):
     fig = px.bar(
         data,
         x=x,
         y=y,
-        title=title,
         color=color,
         color_continuous_scale="Blues",
         text_auto='.2s'
@@ -117,12 +116,12 @@ def create_plotly_bar_chart(data, title, x, y , color = None, x_label=None, y_la
 
     return fig
 
-def create_plotly_line_chart(data, title, x, y, x_label=None, y_label=None, metric_name=None):
+def create_plotly_line_chart(data, x, y, x_label=None, y_label=None, metric_name=None):
     fig = px.line(
         data,
         x=x,
         y=y,
-        title=title,
+        
         markers=True,
     )
 
@@ -139,12 +138,12 @@ def create_plotly_line_chart(data, title, x, y, x_label=None, y_label=None, metr
 
     return fig
 
-def create_plotly_scatter_chart(data, title, x, y, x_label = None, y_label = None, metric_name=None):
+def create_plotly_scatter_chart(data, x, y, x_label = None, y_label = None, metric_name=None):
     fig = px.scatter(
         data,
         x=x,
         y=y,
-        title=title,
+        
     )
     fig.update_layout(
         xaxis_title=x_label or x,
@@ -285,14 +284,14 @@ charts = [
     }
 ]
 
-def generate_all_figures():
+def generate_all_figures(df):
+    
     figures = {}
     
     for chart in charts:
             if  chart["chart_type"]=="bar":
                 fig = create_plotly_bar_chart(
                     data=chart["data"],
-                    title=chart["title"],
                     x=chart["x"],
                     y=chart["y"],
                     color=chart.get("color"),
@@ -303,7 +302,6 @@ def generate_all_figures():
             elif chart["chart_type"]== "line":
                 fig = create_plotly_line_chart(
                     data=chart["data"],
-                    title=chart["title"],
                     x=chart["x"],
                     y=chart["y"],
                     metric_name=chart["metric_name"]  
@@ -313,7 +311,6 @@ def generate_all_figures():
             elif chart["chart_type"] == "scatter":
                 fig = create_plotly_scatter_chart(
                     data=chart["data"],
-                    title=chart["title"],
                     x=chart["x"],
                     y=chart["y"],
                     metric_name=chart["metric_name"]
