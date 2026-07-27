@@ -3,7 +3,7 @@ from data_loader import load_data
 # Load cleaned dataset
 df = load_data()
 
-def calculate_kpis(df):
+def calculate_kpis(df): #======> For KPIs part 
 
     total_sales = (
     df['Sales'].sum()
@@ -22,26 +22,22 @@ def calculate_kpis(df):
     )
 
 
-    total_sales_by_region = (
-    df.groupby("Region")["Sales"]
-      .sum()
-      .sort_values(ascending=False)
-    )
 
-    sales_by_category = (
-    df.groupby("Category")["Sales"]
-      .sum()
-      .sort_values(ascending=False)
-    )
 
+ 
     return {
         "total_sales":total_sales,
         "total_profit":total_profit,
         "total_orders":total_orders,
         "total_customers":total_customers,
-        "total_sales_by_region":total_sales_by_region,
-        "sales_by_category":sales_by_category
+        
     }
+
+sales_by_category = (
+    df.groupby("Category")["Sales"]
+      .sum()
+      .sort_values(ascending=False)
+    )
 
 if __name__ == "__main__":
     print("*" * 50)
