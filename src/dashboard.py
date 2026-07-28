@@ -1,7 +1,7 @@
 from dash import Dash, html, dcc, Input,Output,callback
-from business_analysis import calculate_kpis
-from plotly_visualization import generate_all_figures
-from data_loader import load_data
+from src.business_analysis import calculate_kpis
+from src.plotly_visualization import generate_all_figures
+from src.data_loader import load_data
 
 
 # ==========================

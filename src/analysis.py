@@ -1,4 +1,4 @@
-from data_loader import load_data
+from src.data_loader import load_data
 
 # Load cleaned dataset
 df = load_data()
