@@ -94,6 +94,7 @@ region_options.extend(
 )
 
 app = Dash(__name__)
+server = app.server
 
 
 
@@ -298,6 +299,6 @@ def update_dashboard_data(selected_region): # =====> call back function that fil
             )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
 
 
